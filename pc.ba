@@ -1,0 +1,26 @@
+0 ' Proof of concept for position-
+1 ' independent M/L code.
+2 ' Runs a M/L sub that stores the
+3 ' PC in the variable D%.
+10 A$=STRING$(50,"*")
+15 HX$="0123456789ABCDEF"
+20 ' load M/L sub into string
+30 I=1:P=VARPTR(A$):P=PEEK(P+1)+256*PEEK(P+2)
+35 OP=P
+40 READ V%:POKE P,V%
+45 P=P+1
+50 IF V%<>201 GOTO 40
+60 D%=-1
+70 CALL OP,0,VARPTR(D%)
+80 D=D%:IF D<0 THEN D=D+65536
+82 PRINT"D =";D
+90 PRINT"OP=";OP
+100 V=OP:GOSUB 500
+110 V=D :GOSUB 500
+120 END
+495 ' print hex
+500 O$=STRING$(4,"0"):I=4
+510 NV=INT(V/16):R=V-(NV*16)
+520 MID$(O$,I,1)=MID$(HX$,R+1,1)
+530 V=NV:I=I-1:IF I=0 THEN PRINT O$:RETURN ELSE GOTO 510
+1000 DATA 205,29,0,59,59,209,115,35,114,201

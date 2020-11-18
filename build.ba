@@ -1,0 +1,28 @@
+0 ' read in INHEX.DO, write to ODATA.DO
+1 ' each line, skip to first tab, then
+2 ' read hex pairs, translating to
+3 ' decimal, and spit out in
+4 ' a DATA line numbered 1000
+5 MAXFILES=2
+7 HX$="0123456789ABCDEF"
+10 OPEN"INHEX.DO"FOR INPUT AS 1
+12 OPEN"ODATA.DO"FOR OUTPUT AS 2
+15 TB$=CHR$(9)
+17 PRINT #2,"1000 DATA ";
+20 INPUT #1, A$
+30 T=INSTR(A$,TB$)
+35 IF T THEN A$=RIGHT$(A$,LEN(A$)-T):GOSUB 200
+40 IF NOT EOF(1) THEN GOTO 20
+50 PRINT"DONE."
+55 PRINT #2,""
+60 END
+195 ' scan and convert hex pairs.
+200 I=1:L=LEN(A$)
+210 IF I>L-1 THEN RETURN
+220 H1=INSTR(HX$,MID$(A$,I,1))
+230 H2=INSTR(HX$,MID$(A$,I+1,1))
+240 IF H1=0 OR H2=0 GOTO 300
+250 V=16*(H1-1)+H2-1
+260 IF O=0 THEN O=1 ELSE PRINT #2,",";
+270 PRINT #2,V;
+300 I=I+1:GOTO 210
